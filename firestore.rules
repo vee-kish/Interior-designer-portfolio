@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helpers
+    function isValidId(id) { return id is string && id.size() <= 128; }
+    function incoming() { return request.resource.data; }
+    
+    // 1. Leads Collection
+    match /leads/{leadId} {
+      allow create: if (
+        isValidId(leadId) &&
+        incoming().keys().hasAll(['name', 'email', 'phone', 'service', 'message', 'createdAt']) &&
+        incoming().keys().size() == 6 &&
+        incoming().name is string && incoming().name.size() <= 100 &&
+        incoming().createdAt == request.time
+      );
+    }
+
+    // 2. Bookings Collection
+    match /bookings/{bookingId} {
+      allow create: if (
+        isValidId(bookingId) &&
+        incoming().keys().hasAll(['serviceId', 'date', 'time', 'customerName', 'customerEmail', 'location', 'budget', 'brief', 'status', 'createdAt']) &&
+        incoming().keys().size() == 10 &&
+        incoming().status == 'pending' &&
+        incoming().createdAt == request.time
+      );
+    }
+
+    match /portfolio/{portfolioId} {
+      allow read: if true;
+    }
+  }
+}

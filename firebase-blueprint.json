@@ -1,0 +1,66 @@
+{
+  "entities": {
+    "Lead": {
+      "title": "Lead",
+      "description": "Contact form submissions from potential clients.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "service": { "type": "string" },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "service", "message", "createdAt"]
+    },
+    "Booking": {
+      "title": "Booking",
+      "description": "Consultation bookings from the online scheduler.",
+      "type": "object",
+      "properties": {
+        "serviceId": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "time": { "type": "string" },
+        "customerName": { "type": "string" },
+        "customerEmail": { "type": "string", "format": "email" },
+        "location": { "type": "string" },
+        "budget": { "type": "string" },
+        "brief": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["serviceId", "date", "time", "customerName", "customerEmail", "status", "createdAt"]
+    },
+    "PortfolioItem": {
+      "title": "Portfolio Item",
+      "description": "Completed projects shown in the gallery.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "location": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "beforeImageUrl": { "type": "string" },
+        "afterImageUrl": { "type": "string" },
+        "order": { "type": "integer" }
+      },
+      "required": ["title", "category", "imageUrl"]
+    }
+  },
+  "firestore": {
+    "/leads/{leadId}": {
+      "schema": "Lead",
+      "description": "Collection of contact leads."
+    },
+    "/bookings/{bookingId}": {
+      "schema": "Booking",
+      "description": "Collection of user bookings."
+    },
+    "/portfolio/{portfolioId}": {
+      "schema": "PortfolioItem",
+      "description": "Collection of portfolio projects."
+    }
+  }
+}
